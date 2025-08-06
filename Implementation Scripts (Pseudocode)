@@ -1,0 +1,25 @@
+1. Archival Azure Function (Timer Trigger)
+
+def archive_old_billing_records():
+    from_date = now() - timedelta(days=90)
+    records = cosmos.query("SELECT * FROM c WHERE c.date < @from_date", from_date)
+
+    for record in records:
+        # Write to Blob
+        blob_path = f"{record.date[:7]}/billing_{record.id}.json"
+        blob.upload(blob_path, json.dumps(record))
+
+        # Soft delete or mark as archived
+        cosmos.delete(record.id)
+
+2. Read API with Fallback
+
+def get_billing_record(record_id):
+    record = cosmos.get(record_id)
+    if record:
+        return record
+
+    # Fallback to blob
+    blob_path = find_record_path(record_id)  # Index or known partition logic
+    record_data = blob.download(blob_path)
+    return json.loads(record_data)
