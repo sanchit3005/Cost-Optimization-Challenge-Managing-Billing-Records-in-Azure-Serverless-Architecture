@@ -1,0 +1,18 @@
+resource "azurerm_cosmosdb_account" "main" {
+  name                = "billing-cosmos"
+  location            = azurerm_resource_group.main.location
+  offer_type          = "Standard"
+  kind                = "GlobalDocumentDB"
+  enable_automatic_failover = true
+  consistency_policy {
+    consistency_level = "Session"
+  }
+}
+
+resource "azurerm_storage_account" "archive" {
+  name                     = "billingarchiveacct"
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+  access_tier              = "Cool"
+  enable_https_traffic_only = true
+}
