@@ -1,0 +1,4 @@
+az monitor metrics alert create --name "ColdDataFetchSpike" \
+  --resource billing-function \
+  --condition "total Requests > 100" --window-size 5m \
+  --action email myteam@domain.com
