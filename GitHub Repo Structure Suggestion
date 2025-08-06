@@ -1,0 +1,11 @@
+azure-cost-optimized-billing/
+├── infrastructure/
+│   └── terraform/ (Cosmos, Blob, Function Apps)
+├── functions/
+│   ├── archive_billing_records/ (Timer triggered)
+│   └── billing_api_proxy/ (HTTP triggered)
+├── shared/
+│   └── utils.py (Blob utils, Cosmos wrapper)
+├── tests/
+│   └── test_archival.py
+└── README.md
