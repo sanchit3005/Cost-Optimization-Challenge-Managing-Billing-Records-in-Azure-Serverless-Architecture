@@ -1,0 +1,35 @@
+                                     +---------------------+
+                                     |  Azure DevOps Repo  |
+                                     +----+----------------+
+                                          |
+                       +------------------v--------------------+
+                       |     Azure DevOps YAML Pipelines       |
+                       | (CI/CD for Functions + Infra via IaC) |
+                       +------------------+--------------------+
+                                          |
+                                          v
++----------------------------+      +-----------------------------+
+| Durable Function (Timer)  |----->| CosmosDB (Live Billing Data)|
+| Handles batch archival     |      +-----------------------------+
+| with retries and logs      |                    |
++----------------------------+                    |
+        |                                           v
+        |                              +-----------------------------+
+        +----------------------------->| Blob Storage (Cold Tier)    |
+                                       | - JSON/Parquet by month     |
+                                       +-----------------------------+
+                                                |
+                       +------------------------+------------------------+
+                       |              Application Insights + Monitor     |
+                       | Logs, metrics, alerts for failures, cold reads  |
+                       +-------------------------------------------------+
+
+                      +------------+
+                      | Billing API|  <--- No change to client
+                      +------------+
+                           |
+                +------------------------+
+                | Proxy fallback logic   |
+                | Cosmos -> Blob         |
+                +------------------------+
+
